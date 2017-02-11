@@ -1,0 +1,107 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}HJudge{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.7.0/bootstrap-table.min.css">
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.7.0/bootstrap-table.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.7.0/locale/bootstrap-table-en-US.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $("#submit").click(submit);
+
+        function submit_callback (response, status, xhr) {
+            console.log("Response:");
+            console.log(response);
+            console.log("Status:");
+            console.log(status);
+            console.log("Xhr:");
+            console.log(xhr);
+
+            tabluar_results = [];
+
+            for (var key in response) {
+                console.log(key + " -> " + response[key]);
+                tabluar_results.push({
+                    key:key,
+                    value:response[key]
+                });
+            }
+
+            console.log(tabluar_results);
+            table =$("#results_table");
+
+            table.bootstrapTable({
+                columns: [
+                    {field: 'key', sortable: true, title: 'Key'},
+                    {field: 'value', title: 'Value'}
+                ]
+            });
+
+            table.bootstrapTable('load', tabluar_results);
+            $("#results").show();
+        }
+
+        function submit () {
+            var username =  $("#username").val();
+            var assigment_number =  $("#assigment_number").val();
+            var source_code_url =  $("#source_code_url").val();
+            var execution_params =  $("#execution_params").val();
+            var output_dir =  $("#output_dir").val();
+            console.log("Username: " + username);
+            console.log("assigment_number: " + assigment_number);
+            console.log("source_code_url: " + source_code_url);
+            console.log("execution_params: " + execution_params);
+            console.log("output_dir: " + output_dir);
+
+            $.post("/api",
+                    JSON.stringify({username: username,
+                                    assigment_number:assigment_number,
+                                    source_code_url:source_code_url,
+                                    execution_params:execution_params,
+                                    output_dir:output_dir
+                        }),
+                    submit_callback);
+        }
+
+
+    });
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <div class="page-header">
+            <h1>Hobod assigment submit form</h1>
+        </div>
+        <div class="row"><div class="col-md-12">
+            <form role="form" class="form-group">
+                    <input type="text" class="form-control" id="username" value="Username..."/>
+                    <input type="text" class="form-control" id="assigment_number" value="Assgment N1"/>
+                    <input type="text" class="form-control" id="source_code_url" value="http://"/>
+                    <input type="text" class="form-control" id="execution_params" value="arg1 arg2 arg3"/>
+                    <input type="text" class="form-control" id="output_dir" value="/home/pmezentsev"/>
+                    <button type="button" class="btn btn-default" id="submit">Submit</button>
+            </form>
+        </div></div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row" id="results" hidden>
+        <table class=".table" id="results_table"></table>
+    </div>
+</div>
+
+<hr>
+<footer>
+    <p>&copy; MIPT 2017</p>
+</footer>
+{% endblock %}

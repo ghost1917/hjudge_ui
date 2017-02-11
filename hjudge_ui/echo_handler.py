@@ -5,4 +5,6 @@ class EchoHandler(object):
         pass
 
     def handle(self, request):
+        request["status"]="Processed by echo handler"
+        print request
         return request

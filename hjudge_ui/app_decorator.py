@@ -24,7 +24,7 @@ class ApiDecorator(object):
         @app.route('/api', methods=["POST"])
         def api():
             data = request.get_json(force=True)
-            result = self.handler.handler(data)
+            result = self.handler.handle(data)
             return jsonify(result)
 
 
