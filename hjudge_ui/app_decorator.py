@@ -29,6 +29,9 @@ class ApiDecorator(object):
 
 
 class BootstrapDecorator(object):
+    def __init__(self):
+        pass
+
     def __call__(self, app):
         return Bootstrap(app)
 

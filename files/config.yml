@@ -1,0 +1,9 @@
+application: !factory:hjudge_ui.application.Application
+  decorators: !ref:decorators
+
+decorators:
+  - !factory:hjudge_ui.app_decorator.UiDecorator
+  - !factory:hjudge_ui.app_decorator.BootstrapDecorator
+  - !factory:hjudge_ui.app_decorator.ApiDecorator
+      handler: !factory:hjudge_ui.echo_handler.EchoHandler
+
