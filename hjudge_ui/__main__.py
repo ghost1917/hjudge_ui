@@ -1,6 +1,10 @@
 import argh
 import logging
-from utils import load_config
+from configure import Configuration
+
+
+def load_config(path):
+    return Configuration.from_file(path).configure()
 
 
 @argh.arg('config', type=load_config, help='location of YAML config file')
