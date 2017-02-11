@@ -1,5 +1,4 @@
 import logging
-
 from flask import Flask
 from flask import request, render_template, jsonify, send_from_directory, redirect
 from flask_bootstrap import Bootstrap
@@ -8,16 +7,16 @@ from flask_bootstrap import Bootstrap
 class Application(object):
     def __init__(self, decorators):
         self.decorators = decorators
-        self.app = Flask(__name__, static_url_path='')
 
-    def create(self):
-        self.app.logger.addHandler(logging.StreamHandler())
-        self.app.logger.setLevel(logging.DEBUG)
-        self.app.config.from_object(__name__)
-
+    def run(self, port):
+        app = Flask(__name__, static_url_path='')
+        app.logger.addHandler(logging.StreamHandler())
+        app.logger.setLevel(logging.DEBUG)
+        app.config.from_object(__name__)
         for decorator in self.decorators:
-            decorator(self.app)
-        return self.app
+            decorator(app)
+
+        app.run('0.0.0.0', port, False, threaded=True)
 
 
 class UiDecorator(object):
